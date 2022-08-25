@@ -100,6 +100,66 @@ module.exports = {
 
         }, { timeout: timeout }, text, exact);
     },
+    waitForTdText: function(text, exact, waitInSeconds) {
+
+        // use either passed in timeout or global default
+        var timeout = (waitInSeconds) ? (waitInSeconds * 1000) : DEFAULT_TIMEOUT;
+
+        return page.waitForFunction(function(textToFind, exactMatch) {
+
+            return Array.prototype.slice.call(document.querySelectorAll('td')).some(function(link) {
+
+                if (exactMatch) {
+                    return link.textContent === textToFind;
+                }
+
+                return link.textContent.indexOf(textToFind) > -1;
+            });
+
+        }, { timeout: timeout }, text, exact);
+    },
+    verifyTdTextPresent: async function(name) {
+        const tableRows = 'tbody tr'
+        const rowCount = await page.$$eval(tableRows, (e) => e.length)
+    
+        // At least 1 row exists in table body
+        if (rowCount == 0) {
+            browser.close()
+            return false;
+            //throw new Error(`no elements found with locator, '${tableRows}'`)
+        }
+        for (let i = 0; i < rowCount; i++) {
+          const str = await this.page.$eval(
+            `${tableRows}:nth-child(${i + 1}) td:nth-child(2)`,
+            (e) => e.innerText
+          )
+          if (str === name) {
+            // await this.page.waitAndClick(
+            //   `${tableRows}:nth-child(${i + 1}) td:nth-child(1)`
+            // )
+            return true;
+          }
+        }
+        return false;
+    },
+    waitForTdTextToInvisible: function(text, exact, waitInSeconds) {
+
+        // use either passed in timeout or global default
+        var timeout = (waitInSeconds) ? (waitInSeconds * 1000) : DEFAULT_TIMEOUT;
+
+        return page.waitForFunction(function(textToFind, exactMatch) {
+
+            return Array.prototype.slice.call(document.querySelectorAll('td')).some(function(link) {
+
+                if (exactMatch) {
+                    return link.textContent !== textToFind;
+                }
+
+                return link.textContent.indexOf(textToFind) > -1;
+            });
+
+        }, { timeout: timeout }, text, exact);
+    },
 
     /**
      * Wait for the browser to fire an event (including custom events)
