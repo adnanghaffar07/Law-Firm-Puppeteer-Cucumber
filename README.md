@@ -14,6 +14,15 @@ npm install
 # or "yarn install"
 ```
 
+
+### Execution
+
+To execute test cases, run:
+
+```bash
+node index
+```
+
 <!-- [START runtimesettings] -->
 
 ## Default runtime settings
