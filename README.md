@@ -23,6 +23,10 @@ To execute test cases, run:
 node index
 ```
 
+### Reporting
+
+Report automatically get generated, path will be printed on the console after execution of the tests.
+
 <!-- [START runtimesettings] -->
 
 ## Default runtime settings
